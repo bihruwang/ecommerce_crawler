@@ -3,7 +3,7 @@ FROM ubuntu:22.04
 
 # 更新套件列表，並安裝 curl 與 ca-certificates（下載 uv 所需）
 RUN apt-get update && \
-    apt-get install -y curl ca-certificates
+    DEBIAN_FRONTEND=noninteractive apt-get install -y curl ca-certificates tzdata
 
 # 安裝 uv（用於 Python 虛擬環境和依賴管理）
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -32,6 +32,7 @@ RUN uv sync --frozen
 # 設定語系環境變數，避免 Python 編碼問題
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
+ENV TZ=Asia/Taipei
 
 # 建立 .env
 RUN ENV=DOCKER uv run python genenv.py

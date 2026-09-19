@@ -1,0 +1,16 @@
+version: '3.0'
+
+services:
+  crawler_momo:
+    image: bihruwang/momo_crawler:0.0.2
+    hostname: "momo"
+    command: uv run --env-file=.env celery -A crawler.worker worker --loglevel=info --hostname=%h
+    restart: always
+    environment:
+      - TZ=Asia/Taipei
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    external: true

@@ -1,0 +1,27 @@
+services:
+
+  rabbitmq:
+    image: 'rabbitmq:3.13-management-alpine'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      RABBITMQ_DEFAULT_USER: "worker"
+      RABBITMQ_DEFAULT_PASS: "worker"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    networks:
+      - my_network
+
+  flower:
+    image: mher/flower:2.0
+    command: ["celery", "--broker=amqp://worker:worker@rabbitmq", "flower", "--port=5555"]
+    ports:
+      - 5555:5555
+    depends_on:
+      - rabbitmq
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    external: true

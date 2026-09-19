@@ -4,7 +4,7 @@ from celery import Celery
 
 # loguru 是比標準 logging 更好用的日誌套件, 不用繁瑣設定就能直接用
 from loguru import logger
-
+from celery.schedules import crontab
 # 從 config.py 讀取 RabbitMQ 連線資訊
 # RabbitMQ 是訊息中介 (message broker), Celery 透過它派送任務給 worker
 from crawler.config import (
@@ -33,8 +33,18 @@ app = Celery(
         "crawler.tasks_crawler_finmind_duplicate",
         "crawler.tasks_crawler_momo", # FinMind 重複資料檢查任務
     ],
+    
     # broker: 指定訊息中介的連線網址, Celery 會把任務送到這裡排隊
     # 格式: pyamqp://帳號:密碼@主機:埠號/
     # 例如: pyamqp://worker:worker@127.0.0.1:5672/
     broker=f"pyamqp://{WORKER_ACCOUNT}:{WORKER_PASSWORD}@{RABBITMQ_HOST}:{RABBITMQ_PORT}/",
 )
+app.conf.timezone = "Asia/Taipei"
+app.conf.enable_utc = False
+
+app.conf.beat_schedule = {
+    "momo-daily": {
+        "task": "crawler.tasks_crawler_momo.crawler_momo_all",
+        "schedule": crontab(hour=8, minute=0),
+    },
+}

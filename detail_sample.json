@@ -1,0 +1,117 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "name": "Breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "家電",
+          "item": "https://www.momoshop.com.tw/category/LgrpCategory.jsp?l_code=2900000000&FTOOTH=29"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "冰箱",
+          "item": "https://www.momoshop.com.tw/category/LgrpCategory.jsp?l_code=2919100000"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "本月主打",
+          "item": "https://www.momoshop.com.tw/category/MgrpCategory.jsp?m_code=2919100391"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "LG樂金",
+          "item": "https://www.momoshop.com.tw/category/DgrpCategory.jsp?d_code=2919101094"
+        }
+      ]
+    },
+    {
+      "@id": "https://www.momoshop.com.tw/product/11703779#product",
+      "@type": "ProductGroup",
+      "name": "【SAMPO 聲寶】家電快配★台灣製★92公升一級能效獨享系列雙門小冰箱★momo獨家★(REF-M90G)",
+      "image": [
+        "https://i2.momoshop.com.tw/1771963612/goodsimg/0011/703/779/11703779_R_m.webp",
+        "https://i3.momoshop.com.tw/1789199357/goodsimg/0011/703/779/11703779_O_m.webp"
+      ],
+      "description": "含基本安裝+舊機回收, 直冷式出風設計, 台灣1級能效",
+      "sku": "11703779",
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "品牌名稱",
+          "value": "SAMPO 聲寶"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "類型",
+          "value": "雙門上下門、右開、定頻"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "容量",
+          "value": "51L~100L"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "顏色",
+          "value": "白色"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "效能",
+          "value": "1級能效 "
+        }
+      ],
+      "brand": {
+        "@type": "Brand",
+        "name": "SAMPO 聲寶"
+      },
+      "productGroupID": "11703779",
+      "hasVariant": [
+        {
+          "@type": "Product",
+          "name": "單一規格",
+          "sku": "001",
+          "image": [
+            "https://i2.momoshop.com.tw/1771963612/goodsimg/0011/703/779/11703779_R_m.webp",
+            "https://i3.momoshop.com.tw/1789199357/goodsimg/0011/703/779/11703779_O_m.webp"
+          ],
+          "description": "含基本安裝+舊機回收, 直冷式出風設計, 台灣1級能效",
+          "additionalProperty": {
+            "@type": "PropertyValue",
+            "name": "商品規格",
+            "value": "單一規格"
+          },
+          "offers": {
+            "@type": "Offer",
+            "url": "https://www.momoshop.com.tw/product/11703779",
+            "priceCurrency": "TWD",
+            "price": "5611",
+            "itemCondition": "https://schema.org/NewCondition",
+            "shippingDetails": [
+              {
+                "@type": "OfferShippingDetails",
+                "shippingRate": {
+                  "@type": "MonetaryAmount",
+                  "value": "0",
+                  "currency": "TWD"
+                },
+                "shippingDestination": {
+                  "@type": "DefinedRegion",
+                  "addressCountry": "TW"
+                },
+                "shippingLabel": "momo宅配"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
