@@ -3,10 +3,10 @@ name: momo 每日爬蟲
 on:
   schedule:
     - cron: "0 1 * * *"      # UTC 01:00 = 台北時間 09:00
-  workflow_dispatch:          # 也可以在網頁上手動按一下執行
+  workflow_dispatch:          # 也可以在網頁上手動執行
 
 permissions:
-  contents: write             # 允許它把資料 commit 回 repo
+  contents: write
 
 jobs:
   crawl:
