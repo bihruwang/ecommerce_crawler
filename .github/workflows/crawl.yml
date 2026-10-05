@@ -1,0 +1,35 @@
+name: momo 每日爬蟲
+
+on:
+  schedule:
+    - cron: "0 1 * * *"      # UTC 01:00 = 台北時間 09:00
+  workflow_dispatch:          # 也可以在網頁上手動按一下執行
+
+permissions:
+  contents: write             # 允許它把資料 commit 回 repo
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Taipei
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 安裝套件
+        run: pip install pandas
+
+      - name: 執行爬蟲
+        run: python -m crawler.run_crawl_to_csv
+
+      - name: 提交資料
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git diff --staged --quiet || git commit -m "每日爬蟲 $(date +'%Y-%m-%d')"
+          git push

@@ -4,7 +4,6 @@ from celery import Celery
 
 # loguru 是比標準 logging 更好用的日誌套件, 不用繁瑣設定就能直接用
 from loguru import logger
-from celery.schedules import crontab
 # 從 config.py 讀取 RabbitMQ 連線資訊
 # RabbitMQ 是訊息中介 (message broker), Celery 透過它派送任務給 worker
 from crawler.config import (
@@ -42,9 +41,3 @@ app = Celery(
 app.conf.timezone = "Asia/Taipei"
 app.conf.enable_utc = False
 
-app.conf.beat_schedule = {
-    "momo-daily": {
-        "task": "crawler.tasks_crawler_momo.crawler_momo_all",
-        "schedule": crontab(hour=8, minute=0),
-    },
-}

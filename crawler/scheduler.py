@@ -1,65 +1,32 @@
-import time
-
-# 匯入 APScheduler 的背景排程器（非阻塞式）
-from apscheduler.schedulers.background import BackgroundScheduler
-
-# 匯入 loguru 進行清晰的 log 紀錄
+from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.triggers.cron import CronTrigger
 from loguru import logger
 
-# 匯入 Celery 任務（假設你用的是非同步任務）
-from crawler.tasks_crawler_finmind import crawler_finmind
+from crawler.crawler_momo import CATEGORIES
+from crawler.tasks_crawler_momo import crawler_momo_print
+
+# 一天發三次。因為 task 有防重，重複跑只會留一份，
+# 所以某一次因為斷網或關機沒跑到，後面還有機會補上。
+RUN_HOURS = (9, 13, 21)
 
 
-# 測試用排程任務：印出 hello world（每 5 秒執行一次）
-def hello_world():
-    logger.info("========================hello_world=====================")
-
-
-# 實際任務：發送多檔股票資料抓取任務
-def send_crawler_stock_price_task():
-    # 一次發送多支股票代碼，讓 Celery 處理
-    for stock_id in ["2330", "0050", "2317", "0056", "00713"]:
-        logger.info(stock_id)  # 印出目前處理的股票代碼
-        crawler_finmind.delay(
-            stock_id=stock_id
-        )  # 非同步觸發任務（使用 Celery）
-
-
-def main():
-    # 建立背景排程器，設定時區為 Asia/Taipei
-    scheduler = BackgroundScheduler(
-        timezone="Asia/Taipei",
-    )
-    # 新增 hello_world 任務，每 5 秒執行一次
-    scheduler.add_job(
-        id="hello_world",  # 任務 ID（唯一識別）
-        func=hello_world,  # 要執行的函式
-        trigger="cron",  # 使用 cron 式排程
-        hour="*",  # 每小時
-        minute="*",  # 每分鐘
-        day_of_week="*",  # 每天
-        second="*/5",  # 每 5 秒執行一次
-        coalesce=True,  # 如果錯過排程，只執行一次（避免重複執行）
-    )
-    # 新增爬蟲任務，每 12 小時整點執行一次
-    scheduler.add_job(
-        id="send_crawler_stock_price_task",
-        func=send_crawler_stock_price_task,
-        trigger="cron",
-        hour="*/12",  # 每 12 小時
-        minute="0",  # 整點
-        day_of_week="*",  # 每天
-        second="0",  # 整點
-        coalesce=True,
-    )
-    logger.info(
-        "send_crawler_stock_price_task add scheduler"
-    )  # log 記錄啟用排程
-    scheduler.start()  # 啟動排程器
+def send_momo_tasks():
+    logger.info("發送 momo 爬蟲任務")
+    for category_name in CATEGORIES:
+        crawler_momo_print.s(category_name).apply_async()
+        logger.info(f"已發送：{category_name}")
 
 
 if __name__ == "__main__":
-    main()
-    # 主程式持續執行，避免排程器自動退出
-    while True:
-        time.sleep(600)  # 每 10 分鐘 sleep 一次，保持主程式存活
+    scheduler = BlockingScheduler(timezone="Asia/Taipei")
+
+    for hour in RUN_HOURS:
+        scheduler.add_job(
+            send_momo_tasks,
+            trigger=CronTrigger(hour=hour, minute=0),
+            id=f"momo-{hour}",
+            name=f"momo 每日爬蟲 {hour}:00",
+        )
+
+    logger.info(f"排程啟動，每天 {RUN_HOURS} 點各發送一次")
+    scheduler.start()
